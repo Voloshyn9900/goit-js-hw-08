@@ -18,12 +18,16 @@ refs.feedbackFormEl.addEventListener('input', throttle(feedbackFormSet, 1000));
 document.addEventListener('submit', formSubmit);
 
 function defaultFormGet(e) {
-  console.log('parseJson', parseJson);
+  // console.log('parseJson', parseJson);
   try {
     feedback[`email`] = parseJson[`email`];
     feedback[`message`] = parseJson[`message`];
-    refs.emailInput.value = parseJson[`email`];
-    refs.messageTextarea.value = parseJson[`message`];
+    if (parseJson[`email`]) {
+      refs.emailInput.value = parseJson[`email`];
+    }
+    if (parseJson[`message`]) {
+      refs.messageTextarea.value = parseJson[`message`];
+    }
   } catch (error) {
     console.log('localStorage пустой');
   }
@@ -42,13 +46,16 @@ function feedbackFormSet(e) {
     default:
       break;
   }
-  console.log(feedback);
+  // console.log(feedback);
   localStorage.setItem(localStorageKey, JSON.stringify(feedback));
 }
 
 function formSubmit(e) {
   e.preventDefault();
-  console.log('Конечные данные ', feedback);
+  let isEmpty = JSON.stringify(feedback) === '{}';
+  if (!isEmpty) {
+    console.log('Конечные данные ', feedback);
+  }
   refs.emailInput.value = null;
   refs.messageTextarea.value = null;
   // Можно удалить все из используя localStorage clear
